@@ -6,7 +6,7 @@ export const findById = async (req, res, next) => {
     const { id } = req.params
     if (!id) return res.status(402).send("id is not given")
     const isFound = await User.findById(id)
-    if (!isFound) return res.status(404).send("user not found")
+    if (!isFound) return res.status(404).send("tidak ditemukan id demikian jangan ngada ngada")
     req.foundUser = isFound
     req.userId = id
     next()
