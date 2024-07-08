@@ -3,7 +3,9 @@ import mongoose, { mongo } from "mongoose"
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        unique: true
+        unique: {
+            errorMessage: "Username already exists"
+        }
     },
     password: String,
 })
