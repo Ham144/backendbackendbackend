@@ -1,12 +1,12 @@
-import { Router, response } from "express";
-import mongoose, { mongo } from "mongoose";
+import { Router } from "express";
+import mongoose from "mongoose";
 import User from "../models/User.js";
 import { findById } from "../middlewares/findById.js";
-import { useNavigate } from "react-router-dom";
 import { checkField } from "../middlewares/checkField.js";
 
 
 const router = Router()
+
 
 router.get("/api/users", async (req, res) => {
 
