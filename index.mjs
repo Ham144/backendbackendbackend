@@ -1,14 +1,16 @@
 import express from "express"
 import userRouter from "./src/routes/user.js"
+import productRouter from "./src/routes/product.js"
 import dotenv from "dotenv"
+import cookieParser from "cookie-parser"
 
 const app = express()
 
 dotenv.config()
 app.use(express.json())
+app.use(cookieParser())
 app.use(userRouter)
-
-
+app.use(productRouter)
 
 const PORT = process.env.PORT || 3000
 
@@ -92,5 +94,6 @@ const Documentation = `
     </div>`;
 
 app.get("/", (req, res) => {
+    res.cookie("kuki", "value of kuki", { maxAge: 60000 * 60 * 2 });
     res.status(200).send(Documentation);
 });
