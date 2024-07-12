@@ -4,6 +4,7 @@ import productRouter from "./src/routes/product.js"
 import dotenv from "dotenv"
 import cookieParser from "cookie-parser"
 import session from "express-session"
+import authRouter from "./src/routes/auth.js"
 
 const app = express()
 
@@ -19,6 +20,7 @@ app.use(session({
 
 app.use(userRouter)
 app.use(productRouter)
+app.use(authRouter)
 
 const PORT = process.env.PORT || 3000
 
