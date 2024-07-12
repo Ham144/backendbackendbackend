@@ -11,12 +11,6 @@ const app = express()
 dotenv.config()
 app.use(express.json())
 app.use(cookieParser("the secret"))
-app.use(session({
-    secret: "the secret",
-    resave: false,
-    saveUninitialized: false,
-    cookie: { maxAge: 600000 * 60 * 2 }
-}))
 
 app.use(userRouter)
 app.use(productRouter)
@@ -104,7 +98,5 @@ const Documentation = `
     </div>`;
 
 app.get("/", (req, res) => {
-    const session = req.session.id
-    console.log(session)
     res.status(200).send(Documentation);
 });

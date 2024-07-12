@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { checkDatabase } from "../middlewares/checkDatabase.mjs";
 import User from "../models/User.js";
+import mongoose from "mongoose";
+import session from "express-session";
 
 const router = Router()
 
@@ -13,13 +15,13 @@ router.post("/api/auth", checkDatabase, async (req, res) => {
     const user = await User.findOne({ username })
     if (!user) return res.status(404).send("user not found")
     if (user.password !== password) return res.status(401).send("password not match")
-    res.session.user = user
+    req.sessionID = user._id
     return res.status(200).send("login success: " + user)
 })
 
 router.get("/api/auth/status", async (req, res) => {
-    if (!req.session.user) return res.status(404).send("unauthorized")
-    res.status(200).send("authorized: " + req.session.user)
+    if (!req.sessionID) return res.status(404).send("unauthorized")
+    res.status(200).send("authorized: " + req.session)
 })
 
 export default router
