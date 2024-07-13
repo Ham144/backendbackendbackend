@@ -5,12 +5,22 @@ import dotenv from "dotenv"
 import cookieParser from "cookie-parser"
 import session from "express-session"
 import authRouter from "./src/routes/auth.js"
+import passport from "passport"
+import "./src/strategies/local-strategy.js"
 
 const app = express()
 
 dotenv.config()
 app.use(express.json())
 app.use(cookieParser("the secret"))
+app.use(session({
+    secret: "the secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 600000 * 2 }
+}))
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use(userRouter)
 app.use(productRouter)
@@ -98,5 +108,7 @@ const Documentation = `
     </div>`;
 
 app.get("/", (req, res) => {
-    res.status(200).send(Documentation);
+    res.cookie("kukisigned", "value of it", { signed: true, maxAge: 600000 * 2 })
+    req.session.visited = true
+    res.status(200).send(req.session);
 });

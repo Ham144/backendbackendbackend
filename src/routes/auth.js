@@ -1,27 +1,25 @@
-import { Router } from "express";
-import { checkDatabase } from "../middlewares/checkDatabase.mjs";
-import User from "../models/User.js";
-import mongoose from "mongoose";
-import session from "express-session";
-
+import { Router } from "express"
+import { checkDatabase } from "../middlewares/checkDatabase.js"
+import User from "../models/User.js"
+import passport from "passport"
 const router = Router()
 
+router.post("/api/auth", checkDatabase, passport.authenticate("local"), async (req, res) => {
+    const { username, password } = req.body
 
-//for login
-router.post("/api/auth", checkDatabase, async (req, res) => {
-    const { body: { username, password } } = req
-    if (!username || !password) return res.status(400).send("username and password is required")
-
+    if (!username || !password) return res.status(402).send("username or password is not given")
     const user = await User.findOne({ username })
-    if (!user) return res.status(404).send("user not found")
-    if (user.password !== password) return res.status(401).send("password not match")
-    req.sessionID = user._id
-    return res.status(200).send("login success: " + user)
+    if (!user) return res.status(401).send("you dont have an account")
+    if (password !== user.password) return res.status(401).send("password is wrong")
+    req.session.user = user
+    res.status(200).send(req.session)
 })
 
 router.get("/api/auth/status", async (req, res) => {
-    if (!req.sessionID) return res.status(404).send("unauthorized")
-    res.status(200).send("authorized: " + req.session)
+    if (!req.user) return res.status(401).send("unauthorized")
+    console.log(req.user);
+    console.log(req.session.user)
+    return res.status(200).send(req.user)
 })
 
 export default router
